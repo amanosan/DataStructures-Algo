@@ -221,6 +221,30 @@ public:
         return height;
     }
 
+    // LEVEL ORDER TRAVERSAL (BFS)
+    void printBFS(Node *treeNode)
+    {
+        int height = bst_height(treeNode);
+        for (int i = 0; i <= height; i++)
+            printlevel(treeNode, i);
+    }
+    void printlevel(Node *treeNode, int level)
+    {
+        if (treeNode == NULL)
+        {
+            return;
+        }
+        else if (level == 0)
+        {
+            cout << treeNode->key << " ";
+        }
+        else
+        {
+            printlevel(treeNode->left, level - 1);
+            printlevel(treeNode->right, level - 1);
+        }
+    }
+
     // function to return the Root Node of the Binary Search Tree
     Node *
     getRoot()
@@ -253,6 +277,9 @@ int main()
     else
         cout << "Element not found." << endl;
 
-    cout << "Height of BST: " << bst.bst_height(bst.getRoot());
+    cout << "Height of BST: " << bst.bst_height(bst.getRoot()) << endl;
+
+    cout << "Level order Traversal: " << endl;
+    bst.printBFS(bst.getRoot());
     return 0;
 }
