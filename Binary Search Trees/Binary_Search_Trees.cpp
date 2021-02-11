@@ -190,7 +190,7 @@ public:
 
     // SEARCHING IN BINARY TREE SEARCH
 
-    // recursive function to search element in binary search tree
+    // function to search element in binary search tree
     bool searchElement(Node *treeNode, int element)
     {
         Node *temp = treeNode;
@@ -245,9 +245,62 @@ public:
         }
     }
 
+    // DELETION
+
+    // function to find minimum value node in tree
+    Node *minvalueNode(Node *treeNode)
+    {
+        Node *current = treeNode;
+        while (current->left != NULL)
+        {
+            current = current->left;
+        }
+        return current;
+    }
+
+    // function to recursively delete from Binary Search Tree
+    Node *deleteNode(Node *treeNode, int value)
+    {
+        // if tree is empty
+        if (treeNode == NULL)
+            return treeNode;
+        // if value is greater than the current node then go to right sub tree
+        else if (value > treeNode->key)
+            treeNode->right = deleteNode(treeNode->right, value);
+        // if value is less than the current node then go to the left sub tree
+        else if (value < treeNode->key)
+            treeNode->left = deleteNode(treeNode->left, value);
+
+        // if value matches
+        else
+        {
+            if (treeNode->left == NULL) // node has one child or no child
+            {
+                Node *temp = treeNode->right;
+                delete treeNode;
+                return temp;
+            }
+            else if (treeNode->right == NULL) // node has one child or no child
+            {
+                Node *temp = treeNode->left;
+                delete treeNode;
+                return temp;
+            }
+            else // node has both left and right child
+            {
+                // finding the minimum value node in the right sub tree
+                Node *temp = minvalueNode(treeNode->right);
+                // storing the minimum value in the current node
+                treeNode->key = temp->key;
+                // deleting the value of the temp node
+                treeNode->right = deleteNode(treeNode->right, temp->key);
+            }
+        }
+        return treeNode;
+    }
+
     // function to return the Root Node of the Binary Search Tree
-    Node *
-    getRoot()
+    Node *getRoot()
     {
         return root;
     }
@@ -281,5 +334,11 @@ int main()
 
     cout << "Level order Traversal: " << endl;
     bst.printBFS(bst.getRoot());
+
+    cout << "\nInorder Traversal after deleting 30 from the BST:" << endl;
+    bst.inorderTraversal(bst.deleteNode(bst.getRoot(), 30));
+
+    cout << "\nPrinting Tree after deleting 30" << endl;
+    bst.printTree(bst.getRoot(), 5);
     return 0;
 }
